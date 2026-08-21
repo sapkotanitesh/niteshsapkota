@@ -1,7 +1,7 @@
 # Portfolio Website Skeleton Plan
 
 ## Overview
-Build a single-page scrolling portfolio on the existing **TanStack Start v1 + React + TypeScript + Vite + Tailwind CSS v4** stack. The design direction is **dark modern** with GSAP-driven animations.
+Build a single-page scrolling portfolio on the existing **TanStack Start v1 + React + TypeScript + Vite + Tailwind CSS v4** stack, which is full-stack: server-side (Node-style) logic runs through TanStack Start server functions and API routes, so backend work like a contact-form handler is built in — no separate Express server needed. The design direction is **dark modern** with GSAP-driven animations.
 
 ## Design Direction
 - **Theme**: Dark modern (near-black surfaces, white text, blue accent), with a light-mode toggle button in the nav that switches between dark and light themes.
