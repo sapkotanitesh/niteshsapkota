@@ -28,7 +28,7 @@ Build a single-page scrolling portfolio on the existing **TanStack Start v1 + Re
 
 ### Styles
 - Update `src/styles.css`:
-  - Add dark-modern color tokens (`--color-surface`, `--color-surface-elevated`, `--color-accent`, etc.).
+  - Add color tokens (`--color-surface`, `--color-surface-elevated`, `--color-accent`, etc.) with dark-modern values in `.dark` and matching light-mode values in `:root`, so the theme toggle switches both palettes.
   - Keep existing shadcn tokens intact.
   - Register any new tokens in `@theme inline`.
   - Add a custom `.text-gradient` utility using `@utility`.
