@@ -4,7 +4,7 @@
 Build a single-page scrolling portfolio on the existing **TanStack Start v1 + React + TypeScript + Vite + Tailwind CSS v4** stack. The design direction is **dark modern** with GSAP-driven animations.
 
 ## Design Direction
-- **Theme**: Dark modern (near-black surfaces, white text, blue accent).
+- **Theme**: Dark modern (near-black surfaces, white text, blue accent), with a light-mode toggle button in the nav that switches between dark and light themes.
 - **Structure**: Single-page scroll with anchored nav links (Hero, About, Projects, Contact).
 - **Typography**: Clean sans-serif heading + body pair loaded via Google Fonts `<link>` in `src/routes/__root.tsx`.
 - **Color tokens**: Registered in `src/styles.css` under the existing `@theme inline` block using oklch values.
