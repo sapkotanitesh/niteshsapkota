@@ -73,5 +73,5 @@ Create under `src/components/portfolio/`:
 - Project grid goes 1 column on mobile, 2 on tablet, 3 on desktop.
 
 ## Verification
-- Run `bun run build` to confirm no SSR/import errors.
+- Run `bun run build` (or `npm run build`) to confirm no SSR/import errors.
 - Check preview for all four sections, scroll animations, and hover interactions.
