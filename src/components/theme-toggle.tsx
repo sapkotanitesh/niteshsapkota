@@ -19,36 +19,42 @@ export const themeInitScript = `(() => {
 })();`;
 
 export function ThemeToggle({ className = "" }: { className?: string }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  // null until hydration, so the server and client render the same markup.
+  const [theme, setTheme] = useState<Theme | null>(null);
 
-  // Read the real value only after hydration to avoid an SSR mismatch.
   useEffect(() => {
     setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
   }, []);
 
+  // Applying the theme in an effect (not in the click handler) keeps the DOM
+  // write out of the state updater, which React may call more than once.
+  useEffect(() => {
+    if (!theme) return;
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.style.colorScheme = theme;
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      /* storage unavailable — theme still applies for this session */
+    }
+  }, [theme]);
+
   const toggle = useCallback(() => {
-    setTheme((current) => {
-      const next: Theme = current === "dark" ? "light" : "dark";
-      document.documentElement.classList.toggle("dark", next === "dark");
-      document.documentElement.style.colorScheme = next;
-      try {
-        localStorage.setItem(THEME_STORAGE_KEY, next);
-      } catch {
-        /* storage unavailable — theme still applies for this session */
-      }
-      return next;
-    });
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
   }, []);
+
+  const isDark = theme !== "light";
+  const label = isDark ? "Switch to light mode" : "Switch to dark mode";
 
   return (
     <button
       type="button"
       onClick={toggle}
-      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-      title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={label}
+      title={label}
       className={`inline-flex size-9 items-center justify-center rounded-full border border-border bg-surface-elevated/60 text-foreground transition-colors hover:border-accent/60 hover:text-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden ${className}`}
     >
-      {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+      {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
     </button>
   );
 }
