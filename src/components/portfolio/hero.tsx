@@ -42,6 +42,23 @@ export function Hero() {
           scrub: true,
         },
       });
+
+      // Gentle bob on the scroll cue and the availability dot.
+      gsap.to("[data-scroll-cue]", {
+        y: 6,
+        duration: 1.2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+      gsap.to("[data-pulse-dot]", {
+        scale: 1.6,
+        opacity: 0.4,
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
     },
     { scope },
   );
