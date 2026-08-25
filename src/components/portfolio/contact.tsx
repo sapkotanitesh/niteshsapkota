@@ -1,12 +1,18 @@
 import { useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Mail } from "lucide-react";
+import { Github, Linkedin, Loader2, Mail, MapPin, Twitter, Globe, type LucideIcon } from "lucide-react";
 
 import { ScrollReveal } from "@/components/portfolio/scroll-reveal";
 import { SectionHeading } from "@/components/portfolio/section-heading";
 import { sendContactMessage } from "@/lib/contact.functions";
 import { contactSchema } from "@/lib/contact-schema";
 import { profile } from "@/lib/portfolio-data";
+
+const SOCIAL_ICONS: Record<string, LucideIcon> = {
+  GitHub: Github,
+  LinkedIn: Linkedin,
+  X: Twitter,
+};
 
 type Status = { kind: "idle" | "sending" | "sent" | "error"; message?: string };
 
@@ -53,20 +59,27 @@ export function Contact() {
               <Mail className="size-5 text-accent" />
               {profile.email}
             </a>
-            <p className="text-muted-foreground">Based in {profile.location} — working remotely worldwide.</p>
+            <p className="inline-flex items-center gap-2 text-muted-foreground">
+              <MapPin className="size-4 text-accent" aria-hidden />
+              Based in {profile.location} — working remotely worldwide.
+            </p>
             <ul className="flex flex-wrap gap-3">
-              {profile.socials.map((social) => (
+              {profile.socials.map((social) => {
+                const Icon = SOCIAL_ICONS[social.label] ?? Globe;
+                return (
                 <li key={social.label}>
                   <a
                     href={social.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-accent/60 hover:text-accent"
+                    className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-all hover:-translate-y-0.5 hover:border-accent/60 hover:text-accent"
                   >
+                    <Icon className="size-4" aria-hidden />
                     {social.label}
                   </a>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </ScrollReveal>
 

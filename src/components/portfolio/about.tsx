@@ -1,10 +1,17 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
+import { Layers, Server, Sparkles, MapPin, type LucideIcon } from "lucide-react";
 
 import { gsap, registerGsap, prefersReducedMotion } from "@/lib/gsap";
 import { ScrollReveal } from "@/components/portfolio/scroll-reveal";
 import { profile, skills } from "@/lib/portfolio-data";
 import { SectionHeading } from "@/components/portfolio/section-heading";
+
+const SKILL_ICONS: Record<string, LucideIcon> = {
+  Frontend: Layers,
+  Backend: Server,
+  Craft: Sparkles,
+};
 
 export function About() {
   const scope = useRef<HTMLElement>(null);
@@ -47,16 +54,22 @@ export function About() {
               </p>
             ))}
             <dl className="grid gap-6 border-t border-border pt-8 sm:grid-cols-3">
-              {skills.map((group) => (
+              {skills.map((group) => {
+                const Icon = SKILL_ICONS[group.label] ?? Sparkles;
+                return (
                 <div key={group.label}>
-                  <dt className="text-xs tracking-widest text-accent uppercase">{group.label}</dt>
+                  <dt className="flex items-center gap-2 text-xs tracking-widest text-accent uppercase">
+                    <Icon className="size-3.5" aria-hidden />
+                    {group.label}
+                  </dt>
                   <dd className="mt-3 space-y-1.5 text-sm text-muted-foreground">
                     {group.items.map((item) => (
                       <div key={item}>{item}</div>
                     ))}
                   </dd>
                 </div>
-              ))}
+                );
+              })}
             </dl>
           </ScrollReveal>
 
@@ -79,6 +92,10 @@ export function About() {
                 </span>
                 <p className="mt-4 text-sm font-medium">{profile.name}</p>
                 <p className="text-sm text-muted-foreground">{profile.role}</p>
+                <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <MapPin className="size-3.5 text-accent" aria-hidden />
+                  {profile.location}
+                </p>
               </div>
             </div>
           </div>
