@@ -43,7 +43,7 @@ export function FloatingIcons({ className = "" }: { className?: string }) {
 
       const items = Array.from(root.querySelectorAll<HTMLElement>("[data-float]"));
       items.forEach((el, i) => {
-        const delay = Number(el.dataset.delay ?? 0);
+        const delay = Number(el.dataset["delay"] ?? 0);
         gsap.fromTo(
           el,
           { opacity: 0, scale: 0.6 },
