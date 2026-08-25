@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 
 import { gsap, registerGsap, prefersReducedMotion } from "@/lib/gsap";
 import { profile } from "@/lib/portfolio-data";
+import { FloatingIcons } from "@/components/portfolio/floating-icons";
 
 export function Hero() {
   const scope = useRef<HTMLElement>(null);
@@ -41,6 +42,23 @@ export function Hero() {
           scrub: true,
         },
       });
+
+      // Gentle bob on the scroll cue and the availability dot.
+      gsap.to("[data-scroll-cue]", {
+        y: 6,
+        duration: 1.2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+      gsap.to("[data-pulse-dot]", {
+        scale: 1.6,
+        opacity: 0.4,
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
     },
     { scope },
   );
@@ -54,6 +72,7 @@ export function Hero() {
       className="relative flex min-h-svh items-center overflow-hidden pt-24 pb-16"
     >
       <div className="grid-lines pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+      <FloatingIcons className="hidden md:block" />
       <div
         ref={glowRef}
         aria-hidden
@@ -66,7 +85,7 @@ export function Hero() {
           data-hero-fade
           className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface/70 px-3 py-1 text-xs text-muted-foreground"
         >
-          <span className="size-1.5 rounded-full bg-accent" />
+          <span data-pulse-dot className="size-1.5 rounded-full bg-accent" />
           Available for new work — {profile.location}
         </p>
 
@@ -104,7 +123,7 @@ export function Hero() {
           data-hero-fade
           className="mt-20 flex items-center gap-2 text-xs tracking-widest text-muted-foreground uppercase"
         >
-          <ArrowDown className="size-3" />
+          <ArrowDown data-scroll-cue className="size-3" />
           Scroll
         </div>
       </div>
