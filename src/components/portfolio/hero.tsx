@@ -85,7 +85,7 @@ export function Hero() {
           data-hero-fade
           className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface/70 px-3 py-1 text-xs text-muted-foreground"
         >
-          <span className="size-1.5 rounded-full bg-accent" />
+          <span data-pulse-dot className="size-1.5 rounded-full bg-accent" />
           Available for new work — {profile.location}
         </p>
 
@@ -123,7 +123,7 @@ export function Hero() {
           data-hero-fade
           className="mt-20 flex items-center gap-2 text-xs tracking-widest text-muted-foreground uppercase"
         >
-          <ArrowDown className="size-3" />
+          <ArrowDown data-scroll-cue className="size-3" />
           Scroll
         </div>
       </div>
