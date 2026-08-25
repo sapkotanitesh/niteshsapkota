@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 
 import { gsap, registerGsap, prefersReducedMotion } from "@/lib/gsap";
 import { profile } from "@/lib/portfolio-data";
+import { FloatingIcons } from "@/components/portfolio/floating-icons";
 
 export function Hero() {
   const scope = useRef<HTMLElement>(null);
@@ -54,6 +55,7 @@ export function Hero() {
       className="relative flex min-h-svh items-center overflow-hidden pt-24 pb-16"
     >
       <div className="grid-lines pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+      <FloatingIcons className="hidden md:block" />
       <div
         ref={glowRef}
         aria-hidden
