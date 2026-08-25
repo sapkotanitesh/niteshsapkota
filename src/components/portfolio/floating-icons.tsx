@@ -18,14 +18,14 @@ import { gsap, registerGsap, prefersReducedMotion } from "@/lib/gsap";
 const ICONS = [
   { Icon: Code2, label: "Code", top: "12%", left: "6%", size: "size-6", delay: 0 },
   { Icon: Sparkles, label: "Motion", top: "22%", left: "88%", size: "size-5", delay: 0.4 },
-  { Icon: Component, label: "Components", top: "58%", left: "4%", size: "size-5", delay: 0.8 },
+  { Icon: Component, label: "Components", top: "34%", left: "3%", size: "size-5", delay: 0.8 },
   { Icon: Database, label: "Data", top: "70%", left: "92%", size: "size-6", delay: 1.2 },
   { Icon: Palette, label: "Design", top: "38%", left: "80%", size: "size-5", delay: 0.2 },
   { Icon: Terminal, label: "Tooling", top: "80%", left: "16%", size: "size-5", delay: 1 },
   { Icon: Braces, label: "TypeScript", top: "8%", left: "68%", size: "size-5", delay: 0.6 },
-  { Icon: Zap, label: "Performance", top: "48%", left: "13%", size: "size-4", delay: 1.4 },
+  { Icon: Zap, label: "Performance", top: "52%", left: "94%", size: "size-4", delay: 1.4 },
   { Icon: Figma, label: "Figma", top: "88%", left: "72%", size: "size-4", delay: 0.9 },
-  { Icon: Wand2, label: "Craft", top: "30%", left: "34%", size: "size-4", delay: 1.6 },
+  { Icon: Wand2, label: "Craft", top: "14%", left: "44%", size: "size-4", delay: 1.6 },
 ];
 
 /**
