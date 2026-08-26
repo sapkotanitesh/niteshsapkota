@@ -1,11 +1,23 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { Layers, Server, Sparkles, MapPin, type LucideIcon } from "lucide-react";
+import {
+  Layers,
+  Server,
+  Sparkles,
+  MapPin,
+  Image as ImageIcon,
+  type LucideIcon,
+} from "lucide-react";
 
 import { gsap, registerGsap, prefersReducedMotion } from "@/lib/gsap";
 import { ScrollReveal } from "@/components/portfolio/scroll-reveal";
 import { profile, skills } from "@/lib/portfolio-data";
 import { SectionHeading } from "@/components/portfolio/section-heading";
+import about1 from "@/assets/about-1.jpg";
+import about2 from "@/assets/about-2.jpg";
+import about3 from "@/assets/about-3.jpg";
+
+const SLIDES = [about1, about2, about3];
 
 const SKILL_ICONS: Record<string, LucideIcon> = {
   Frontend: Layers,
@@ -16,6 +28,33 @@ const SKILL_ICONS: Record<string, LucideIcon> = {
 export function About() {
   const scope = useRef<HTMLElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
+  const slideRefs = useRef<Array<HTMLImageElement | null>>([]);
+  const indexRef = useRef(0);
+  const [index, setIndex] = useState(0);
+
+  const cycle = () => {
+    const next = (indexRef.current + 1) % SLIDES.length;
+    indexRef.current = next;
+    setIndex(next);
+
+    if (prefersReducedMotion()) {
+      slideRefs.current.forEach((el, i) => {
+        if (el) el.style.opacity = i === next ? "1" : "0";
+      });
+      return;
+    }
+
+    const incoming = slideRefs.current[next];
+    if (!incoming) return;
+    gsap.fromTo(
+      incoming,
+      { opacity: 0, scale: 1.08 },
+      { opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" },
+    );
+    slideRefs.current.forEach((el, i) => {
+      if (el && i !== next) gsap.to(el, { opacity: 0, duration: 0.6, ease: "power2.inOut" });
+    });
+  };
 
   useGSAP(
     () => {
