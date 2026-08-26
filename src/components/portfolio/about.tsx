@@ -52,7 +52,6 @@ export function About() {
       { opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" },
     );
     slideRefs.current.forEach((el, i) => {
-      if (el && i !== next && i !== indexRef.current) return;
       if (el && i !== next) gsap.to(el, { opacity: 0, duration: 0.6, ease: "power2.inOut" });
     });
   };
