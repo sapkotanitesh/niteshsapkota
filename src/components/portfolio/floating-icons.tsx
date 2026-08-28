@@ -28,9 +28,31 @@ const ICONS = [
   { Icon: Wand2, label: "Craft", top: "14%", left: "44%", size: "size-4", delay: 1.6 },
 ];
 
+type Body = {
+  el: HTMLElement;
+  /** offset from the icon's CSS home position */
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  rot: number;
+  vr: number;
+  /** idle drift */
+  phase: number;
+  amp: number;
+  speed: number;
+};
+
+const HOVER_RADIUS = 110; // px around the cursor that pushes icons
+const FRICTION = 0.94;
+const SPRING = 0.012; // pull back home
+const MAX_SPEED = 55;
+
 /**
- * Decorative floating tech icons. Purely presentational — hidden from
- * assistive tech and frozen when the visitor prefers reduced motion.
+ * Decorative floating tech icons. Hovering near one flicks it away with the
+ * cursor's momentum; it then drifts and springs back to its home position.
+ * Purely presentational — hidden from assistive tech and frozen when the
+ * visitor prefers reduced motion.
  */
 export function FloatingIcons({ className = "" }: { className?: string }) {
   const scope = useRef<HTMLDivElement>(null);
@@ -39,27 +61,122 @@ export function FloatingIcons({ className = "" }: { className?: string }) {
     () => {
       registerGsap();
       const root = scope.current;
-      if (!root || prefersReducedMotion()) return;
+      if (!root) return;
 
       const items = Array.from(root.querySelectorAll<HTMLElement>("[data-float]"));
-      items.forEach((el, i) => {
+
+      // Entrance pop.
+      items.forEach((el) => {
         const delay = Number(el.dataset["delay"] ?? 0);
         gsap.fromTo(
           el,
           { opacity: 0, scale: 0.6 },
           { opacity: 1, scale: 1, duration: 0.8, delay: 0.3 + delay * 0.3, ease: "back.out(2)" },
         );
-        gsap.to(el, {
-          y: i % 2 === 0 ? -18 : 16,
-          x: i % 3 === 0 ? 10 : -8,
-          rotate: i % 2 === 0 ? 6 : -6,
-          duration: 3.2 + (i % 4) * 0.6,
-          delay,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
       });
+
+      if (prefersReducedMotion()) return;
+
+      const bodies: Body[] = items.map((el, i) => ({
+        el,
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        rot: 0,
+        vr: 0,
+        phase: i * 1.7,
+        amp: 8 + (i % 4) * 3,
+        speed: 0.35 + (i % 5) * 0.08,
+      }));
+
+      let pointer = { x: -9999, y: -9999, px: -9999, py: -9999, active: false };
+
+      const onMove = (e: PointerEvent) => {
+        const rect = root.getBoundingClientRect();
+        const nx = e.clientX - rect.left;
+        const ny = e.clientY - rect.top;
+        if (!pointer.active) {
+          pointer.px = nx;
+          pointer.py = ny;
+        }
+        pointer.x = nx;
+        pointer.y = ny;
+        pointer.active = true;
+      };
+      const onLeave = () => {
+        pointer.active = false;
+        pointer.x = pointer.y = -9999;
+      };
+
+      window.addEventListener("pointermove", onMove, { passive: true });
+      window.addEventListener("pointerleave", onLeave);
+
+      const tick = (time: number, delta: number) => {
+        const d = Math.min(delta, 40) / 16.666;
+        // cursor velocity since last frame
+        const mvx = pointer.x - pointer.px;
+        const mvy = pointer.y - pointer.py;
+        pointer.px = pointer.x;
+        pointer.py = pointer.y;
+
+        const t = time / 1000;
+
+        for (const b of bodies) {
+          const r = b.el.getBoundingClientRect();
+          const rootRect = root.getBoundingClientRect();
+          const cx = r.left - rootRect.left + r.width / 2;
+          const cy = r.top - rootRect.top + r.height / 2;
+
+          if (pointer.active) {
+            const dx = cx - pointer.x;
+            const dy = cy - pointer.y;
+            const dist = Math.hypot(dx, dy) || 0.001;
+            if (dist < HOVER_RADIUS) {
+              const force = (1 - dist / HOVER_RADIUS) * 6;
+              b.vx += (dx / dist) * force + mvx * 0.35;
+              b.vy += (dy / dist) * force + mvy * 0.35;
+              b.vr += (mvx * 0.15 + force * 0.4) * (dy > 0 ? 1 : -1);
+            }
+          }
+
+          // spring home + friction
+          b.vx += -b.x * SPRING * d;
+          b.vy += -b.y * SPRING * d;
+          b.vx *= FRICTION;
+          b.vy *= FRICTION;
+          b.vr *= 0.92;
+
+          const sp = Math.hypot(b.vx, b.vy);
+          if (sp > MAX_SPEED) {
+            b.vx = (b.vx / sp) * MAX_SPEED;
+            b.vy = (b.vy / sp) * MAX_SPEED;
+          }
+
+          b.x += b.vx * d;
+          b.y += b.vy * d;
+          b.rot += b.vr * d;
+          b.rot *= 0.96;
+
+          const driftY = Math.sin(t * b.speed + b.phase) * b.amp;
+          const driftX = Math.cos(t * b.speed * 0.8 + b.phase) * b.amp * 0.6;
+
+          gsap.set(b.el, {
+            x: b.x + driftX,
+            y: b.y + driftY,
+            rotate: b.rot,
+            scale: 1 + Math.min(sp, 20) / 120,
+          });
+        }
+      };
+
+      gsap.ticker.add(tick);
+
+      return () => {
+        gsap.ticker.remove(tick);
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerleave", onLeave);
+      };
     },
     { scope },
   );
@@ -75,7 +192,7 @@ export function FloatingIcons({ className = "" }: { className?: string }) {
           key={label}
           data-float
           data-delay={delay}
-          className="absolute flex size-11 items-center justify-center rounded-2xl border border-border bg-surface/60 text-accent backdrop-blur-sm"
+          className="absolute flex size-11 items-center justify-center rounded-2xl border border-border bg-surface/60 text-accent backdrop-blur-sm will-change-transform"
           style={{ top, left }}
         >
           <Icon className={size} />
