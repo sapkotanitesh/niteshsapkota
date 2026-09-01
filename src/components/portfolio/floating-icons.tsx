@@ -43,10 +43,10 @@ type Body = {
   speed: number;
 };
 
-const HOVER_RADIUS = 110; // px around the cursor that pushes icons
-const FRICTION = 0.94;
-const SPRING = 0.012; // pull back home
-const MAX_SPEED = 55;
+const HOVER_RADIUS = 140; // px around the cursor that pushes icons
+const FRICTION = 0.955;
+const SPRING = 0.008; // pull back home (lower = looser, floatier return)
+const MAX_SPEED = 80;
 
 /**
  * Decorative floating tech icons. Hovering near one flicks it away with the

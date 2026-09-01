@@ -72,7 +72,7 @@ export function Hero() {
       className="relative flex min-h-svh items-center overflow-hidden pt-24 pb-16"
     >
       <div className="grid-lines pointer-events-none absolute inset-0 opacity-40" aria-hidden />
-      <FloatingIcons className="hidden md:block" />
+      <FloatingIcons />
       <div
         ref={glowRef}
         aria-hidden
