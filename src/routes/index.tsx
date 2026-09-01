@@ -5,6 +5,7 @@ import { Hero } from "@/components/portfolio/hero";
 import { About } from "@/components/portfolio/about";
 import { Projects } from "@/components/portfolio/projects";
 import { Contact } from "@/components/portfolio/contact";
+import { Resume } from "@/components/portfolio/resume";
 import { profile, projects, skills } from "@/lib/portfolio-data";
 
 const title = "Nitesh Sapkota — Frontend Engineer & Interaction Designer";
@@ -81,6 +82,7 @@ function Index() {
         <Hero />
         <About />
         <Projects />
+        <Resume />
         <Contact />
       </main>
     </>
