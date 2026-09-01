@@ -43,10 +43,10 @@ type Body = {
   speed: number;
 };
 
-const HOVER_RADIUS = 110; // px around the cursor that pushes icons
-const FRICTION = 0.94;
-const SPRING = 0.012; // pull back home
-const MAX_SPEED = 55;
+const HOVER_RADIUS = 140; // px around the cursor that pushes icons
+const FRICTION = 0.955;
+const SPRING = 0.008; // pull back home (lower = looser, floatier return)
+const MAX_SPEED = 80;
 
 /**
  * Decorative floating tech icons. Hovering near one flicks it away with the
@@ -128,15 +128,18 @@ export function FloatingIcons({ className = "" }: { className?: string }) {
           const cx = r.left - rootRect.left + r.width / 2;
           const cy = r.top - rootRect.top + r.height / 2;
 
+          let near = 0;
           if (pointer.active) {
             const dx = cx - pointer.x;
             const dy = cy - pointer.y;
             const dist = Math.hypot(dx, dy) || 0.001;
             if (dist < HOVER_RADIUS) {
-              const force = (1 - dist / HOVER_RADIUS) * 6;
-              b.vx += (dx / dist) * force + mvx * 0.35;
-              b.vy += (dy / dist) * force + mvy * 0.35;
-              b.vr += (mvx * 0.15 + force * 0.4) * (dy > 0 ? 1 : -1);
+              near = 1 - dist / HOVER_RADIUS;
+              // sharper falloff = snappier flick when the cursor gets close
+              const force = near * near * 14;
+              b.vx += (dx / dist) * force + mvx * (0.35 + near * 0.55);
+              b.vy += (dy / dist) * force + mvy * (0.35 + near * 0.55);
+              b.vr += (mvx * 0.3 + force * 0.9) * (dy > 0 ? 1 : -1);
             }
           }
 
@@ -145,7 +148,7 @@ export function FloatingIcons({ className = "" }: { className?: string }) {
           b.vy += -b.y * SPRING * d;
           b.vx *= FRICTION;
           b.vy *= FRICTION;
-          b.vr *= 0.92;
+          b.vr *= 0.94;
 
           const sp = Math.hypot(b.vx, b.vy);
           if (sp > MAX_SPEED) {
@@ -161,12 +164,27 @@ export function FloatingIcons({ className = "" }: { className?: string }) {
           const driftY = Math.sin(t * b.speed + b.phase) * b.amp;
           const driftX = Math.cos(t * b.speed * 0.8 + b.phase) * b.amp * 0.6;
 
+          // squash & stretch along the direction of travel + glow when near
+          const stretch = Math.min(sp / 90, 0.35);
+          const angle = Math.atan2(b.vy, b.vx) * (180 / Math.PI);
+
           gsap.set(b.el, {
             x: b.x + driftX,
             y: b.y + driftY,
             rotate: b.rot,
-            scale: 1 + Math.min(sp, 20) / 120,
+            scale: 1 + near * 0.15 + Math.min(sp, 20) / 150,
           });
+          gsap.set(b.el.firstElementChild, {
+            rotate: angle - b.rot,
+            scaleX: 1 + stretch,
+            scaleY: 1 - stretch * 0.6,
+          });
+          const glow = Math.min(0.25 + near + sp / 60, 1);
+          b.el.style.borderColor = `color-mix(in oklab, var(--color-accent) ${Math.round(glow * 70)}%, var(--color-border))`;
+          b.el.style.boxShadow =
+            glow > 0.4
+              ? `0 0 ${Math.round(glow * 24)}px color-mix(in oklab, var(--color-accent) ${Math.round(glow * 45)}%, transparent)`
+              : "none";
         }
       };
 
