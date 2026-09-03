@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedResumeEditorRouteImport } from './routes/_authenticated/resume-editor'
 
@@ -29,6 +30,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -44,12 +50,14 @@ const AuthenticatedResumeEditorRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/resume-editor': typeof AuthenticatedResumeEditorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/resume-editor': typeof AuthenticatedResumeEditorRoute
 }
@@ -58,19 +66,21 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/resume-editor': typeof AuthenticatedResumeEditorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/sitemap.xml' | '/resume-editor'
+  fullPaths: '/' | '/auth' | '/portfolio' | '/sitemap.xml' | '/resume-editor'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/sitemap.xml' | '/resume-editor'
+  to: '/' | '/auth' | '/portfolio' | '/sitemap.xml' | '/resume-editor'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/portfolio'
     | '/sitemap.xml'
     | '/_authenticated/resume-editor'
   fileRoutesById: FileRoutesById
@@ -79,6 +89,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  PortfolioRoute: typeof PortfolioRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -103,6 +114,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -137,6 +155,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  PortfolioRoute: PortfolioRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
