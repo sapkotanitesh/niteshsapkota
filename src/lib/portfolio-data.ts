@@ -1,9 +1,17 @@
+import projectOrbit from "@/assets/project-orbit.jpg";
+import projectNimbus from "@/assets/project-nimbus.jpg";
+import projectFieldnote from "@/assets/project-fieldnote.jpg";
+import projectSignal from "@/assets/project-signal.jpg";
+
 export type Project = {
   title: string;
   description: string;
   tags: string[];
   year: string;
   link: string;
+  image: string;
+  imageAlt: string;
+  role?: string;
 };
 
 export const projects: Project[] = [
@@ -13,7 +21,10 @@ export const projects: Project[] = [
       "A realtime dashboard for product teams — streaming charts, saved segments, and a query builder that non-engineers actually use.",
     tags: ["React", "TypeScript", "D3"],
     year: "2026",
-    link: "#",
+    link: "https://example.com/orbit-analytics",
+    image: projectOrbit,
+    imageAlt: "Dark realtime analytics dashboard with glowing teal streaming charts",
+    role: "Lead frontend engineer",
   },
   {
     title: "Nimbus Commerce",
@@ -21,7 +32,10 @@ export const projects: Project[] = [
       "Headless storefront with an editorial feel. Sub-second navigation, animated product transitions, and a fully typed checkout flow.",
     tags: ["TanStack Start", "Tailwind", "Stripe"],
     year: "2025",
-    link: "#",
+    link: "https://example.com/nimbus-commerce",
+    image: projectNimbus,
+    imageAlt: "Editorial headless storefront shown on a laptop in a dark studio",
+    role: "Frontend & motion",
   },
   {
     title: "Fieldnote",
@@ -29,7 +43,10 @@ export const projects: Project[] = [
       "Offline-first note taking for researchers. Local sync engine, conflict resolution, and a keyboard-driven capture experience.",
     tags: ["PWA", "IndexedDB", "GSAP"],
     year: "2025",
-    link: "#",
+    link: "https://example.com/fieldnote",
+    image: projectFieldnote,
+    imageAlt: "Offline-first research note taking app on a tablet in low light",
+    role: "Product engineer",
   },
   {
     title: "Signal Studio",
@@ -37,7 +54,10 @@ export const projects: Project[] = [
       "A motion playground where designers compose scroll timelines visually and export production-ready animation code.",
     tags: ["GSAP", "Canvas", "Node"],
     year: "2024",
-    link: "#",
+    link: "https://example.com/signal-studio",
+    image: projectSignal,
+    imageAlt: "Abstract glowing animation timeline curves on a black background",
+    role: "Creative developer",
   },
 ];
 
