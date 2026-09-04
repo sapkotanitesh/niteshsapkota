@@ -69,10 +69,11 @@ export const skills: Skill[] = [
   { label: "Craft", items: ["Design systems", "Motion", "Accessibility", "Performance"] },
 ];
 
-export const navLinks = [
+export const navLinks: { id: string; label: string; to?: string }[] = [
   { id: "hero", label: "Home" },
   { id: "about", label: "About" },
   { id: "projects", label: "Projects" },
+  { id: "portfolio", label: "Portfolio", to: "/portfolio" },
   { id: "resume", label: "Resume" },
   { id: "contact", label: "Contact" },
 ];
